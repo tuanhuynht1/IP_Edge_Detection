@@ -102,23 +102,9 @@ void utility::sobelEdgeDetection(image& src, image& tgt, int threshold, Region r
 
 	//apply verticle mask
 	vector<vector<int>> iDelta = applyMask(SOBEL_I,src,roi);
-	// for(int i = 0; i < iDelta.size(); i++){
-	// 	for(int j = 0; j < iDelta[0].size(); j++){
-	// 		cout << iDelta[i][j] << " ";
-	// 	}
-	// 	cout << endl;
-	// }
-	// cout << endl;
 
 	//apply horizontal mask
 	vector<vector<int>> jDelta = applyMask(SOBEL_J,src,roi);
-	// for(int i = 0; i < jDelta.size(); i++){
-	// 	for(int j = 0; j < jDelta[0].size(); j++){
-	// 		cout << jDelta[i][j] << " ";
-	// 	}
-	// 	cout << endl;
-	// }
-	// cout << endl;
 
 	//calculate magnitude
 	vector<vector<float>> amplitude(roi.ilen, vector<float>(roi.jlen));
@@ -126,9 +112,7 @@ void utility::sobelEdgeDetection(image& src, image& tgt, int threshold, Region r
 		for(int j = 0; j < amplitude[0].size(); j++){
 			// sqrt (iDelta^2 + jDelta^2)
 			amplitude[i][j] = sqrt((pow(iDelta[i][j],2)+pow(jDelta[i][j],2)));
-			// cout << amplitude[i][j] << " ";
 		}
-		// cout << endl;
 	}
 
 	//thresholding
@@ -140,8 +124,49 @@ void utility::sobelEdgeDetection(image& src, image& tgt, int threshold, Region r
 			else{
 				tgt.setPixel(i,j,MAXRGB);
 			}
+			// cout << tgt.getPixel(i,j) << " ";
+		}
+		// cout << endl;
+	}
+	tgt.save("test_amp.pgm");
+
+	iDelta = applyMask(SOBEL_I,tgt,roi);
+	for(int i = 0 ; i < iDelta.size(); i++){
+		for(int j = 0 ; j < iDelta[0].size(); j++){
+			// cout << iDelta[i][j] << " ";
+		}
+		// cout << endl;
+	}
+	jDelta = applyMask(SOBEL_J,tgt,roi);
+	for(int i = 0 ; i < jDelta.size(); i++){
+		for(int j = 0 ; j < jDelta[0].size(); j++){
+			// cout << jDelta[i][j] << " ";
+		}
+		// cout << endl;
+	}
+
+	//directional
+	vector<vector<float>> direction(roi.ilen, vector<float>(roi.jlen));
+	for(int i = 0; i < direction.size(); i++){
+		for(int j = 0; j < direction[0].size(); j++){
+			//arctan2(di/dj) * degree conversion
+			direction[i][j] = atan2(iDelta[i][j],jDelta[i][j]) * 180/3.14159;
+			// cout << direction[i][j] << " ";
+		}
+		// cout << endl;
+	}
+
+	//thresholding
+	for(int i = roi.i0; i < roi.ilim; i++){
+		for(int j = roi.j0; j < roi.jlim; j++){
+			if(direction[i-roi.i0][j-roi.j0] >= 100 && direction[i-roi.i0][j-roi.j0] <= 120 ){
+				tgt.setPixel(i,j,MAXRGB);
+			}
+			else{
+				tgt.setPixel(i,j,MINRGB);
+			}
 		}
 	}
-	tgt.save("test.pgm");
+	tgt.save("test_dir.pgm");
 
 }

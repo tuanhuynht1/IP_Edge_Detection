@@ -25,9 +25,9 @@ int main (int argc, char** argv){
 		// exit(1);
 
 		cout << "TESTING\n" << endl;
-		Region R(100,150,250,250);
+		Region R(50,50,350,350);
 		image src, tgt;
-		src.read(strdup("tree.pgm"));
+		src.read(strdup("lena.pgm"));
 
 		// for(int i = R.i0; i < R.ilim; i++){
 		// 	for(int j = R.j0; j < R.jlim; j++){
@@ -37,7 +37,7 @@ int main (int argc, char** argv){
 		// }
 		// cout << endl << endl;
 
-		utility::sobelEdgeDetection(src,tgt,300,R);
+		utility::sobelEdgeDetection(src,tgt,100,R);
 
 		// vector<vector<int>> delta = utility::applyMask(SOBEL_I,src,R);
 		// for(int i = 0; i < delta.size(); i++){
