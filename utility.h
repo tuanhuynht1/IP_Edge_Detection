@@ -28,10 +28,11 @@ class utility
 		//apply mask
 		static vector<vector<int>> applyMask(mask_type mask, image& src, Region roi);
 
-		//sobel amplitude 
-		static void sobelEdgeDetection(image& src, image& tgt, mask_type m, int threshold, Region roi);
+		//amplitude detection 
+		static void edgeDetection(image& src, image& tgt, mask_type m, int threshold, Region roi);
 
-		// static void directionalEdgeDectection(image& src, float degree, Region roi);
+		//direction detection
+		static void directionDectection(image& src, image& tgt, mask_type m, float degree, Region roi);
 };
 
 

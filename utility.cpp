@@ -96,7 +96,7 @@ vector<vector<int>> utility::applyMask(mask_type m, image& src, Region roi){
 
 }
 
-void utility::sobelEdgeDetection(image& src, image& tgt, mask_type m, int threshold, Region roi){
+void utility::edgeDetection(image& src, image& tgt, mask_type m, int threshold, Region roi){
 	//copy src image to tgt
 	tgt.copyImage(src);
 
@@ -113,7 +113,7 @@ void utility::sobelEdgeDetection(image& src, image& tgt, mask_type m, int thresh
 		break;
 	
 	default:
-		break;
+		return;
 	}
 	
 
@@ -139,46 +139,49 @@ void utility::sobelEdgeDetection(image& src, image& tgt, mask_type m, int thresh
 	}
 }
 
+void utility::directionDectection(image& src, image& tgt, mask_type m, float degree, Region roi){
+	//copy src (should be a binarized image)
+	tgt.copyImage(src);
 
-	// tgt.save("test_amp.pgm");
+	vector<vector<int>> iDelta;
+	vector<vector<int>> jDelta;
 
-	// iDelta = applyMask(SOBEL_I,tgt,roi);
-	// for(int i = 0 ; i < iDelta.size(); i++){
-	// 	for(int j = 0 ; j < iDelta[0].size(); j++){
-	// 		// cout << iDelta[i][j] << " ";
-	// 	}
-	// 	// cout << endl;
-	// }
-	// jDelta = applyMask(SOBEL_J,tgt,roi);
-	// for(int i = 0 ; i < jDelta.size(); i++){
-	// 	for(int j = 0 ; j < jDelta[0].size(); j++){
-	// 		// cout << jDelta[i][j] << " ";
-	// 	}
-	// 	// cout << endl;
-	// }
+	switch (m) {
+	case SOBEL:
+		//apply verticle mask
+		iDelta = applyMask(SOBEL_I,src,roi);
 
-	//directional
-	// vector<vector<float>> direction(roi.ilen, vector<float>(roi.jlen));
-	// for(int i = 0; i < direction.size(); i++){
-	// 	for(int j = 0; j < direction[0].size(); j++){
-	// 		//arctan2(di/dj) * degree conversion
-	// 		direction[i][j] = atan2(iDelta[i][j],jDelta[i][j]) * 180/3.14159;
-	// 		// cout << direction[i][j] << " ";
-	// 	}
-	// 	// cout << endl;
-	// }
+		//apply horizontal mask
+		jDelta = applyMask(SOBEL_J,src,roi);
+		break;
+	
+	default:
+		return;
+	}
 
-	// //thresholding
-	// for(int i = roi.i0; i < roi.ilim; i++){
-	// 	for(int j = roi.j0; j < roi.jlim; j++){
-	// 		if(direction[i-roi.i0][j-roi.j0] >= 100 && direction[i-roi.i0][j-roi.j0] <= 120 ){
-	// 			tgt.setPixel(i,j,MAXRGB);
-	// 		}
-	// 		else{
-	// 			tgt.setPixel(i,j,MINRGB);
-	// 		}
-	// 	}
-	// }
-	// tgt.save("test_dir.pgm");
+	//calculate direction
+	vector<vector<float>> direction(roi.ilen, vector<float>(roi.jlen));
+	for(int i = 0; i < direction.size(); i++){
+		for(int j = 0; j < direction[0].size(); j++){
+			//arctan2(di/dj) * degree conversion
+			direction[i][j] = atan2(jDelta[i][j],iDelta[i][j]) * 180/3.14159;
+			// cout << direction[i][j] << " ";
+		}
+		// cout << endl;
+	}
+
+	//thresholding
+	for(int i = roi.i0; i < roi.ilim; i++){
+		for(int j = roi.j0; j < roi.jlim; j++){
+			if(direction[i-roi.i0][j-roi.j0] >= (-1*degree) -10 && direction[i-roi.i0][j-roi.j0] <= (-1*degree) + 10 ){
+				tgt.setPixel(i,j,MAXRGB);
+			}
+			else{
+				tgt.setPixel(i,j,MINRGB);
+			}
+		}
+	}
+}
+
 
 
