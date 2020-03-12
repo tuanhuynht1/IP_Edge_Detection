@@ -179,6 +179,14 @@ void utility::directionDectection(image& src, image& tgt, mask_type m, float deg
 		//apply horizontal mask
 		jDelta = applyMask(SOBEL_J,src,roi);
 		break;
+
+	case SOBEL5:
+		//apply verticle mask
+		iDelta = applyMask(SOBEL5_I,src,roi);
+
+		//apply horizontal mask
+		jDelta = applyMask(SOBEL5_J,src,roi);
+		break;
 	
 	default:
 		return;
