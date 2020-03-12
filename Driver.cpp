@@ -27,7 +27,7 @@ int main (int argc, char** argv){
 		cout << "TESTING\n" << endl;
 		Region R(50,50,300,300);
 		image src, tgt1, tgt2;
-		src.read(strdup("lena.pgm"));
+		src.read(strdup("tree.pgm"));
 
 		// for(int i = R.i0; i < R.ilim; i++){
 		// 	for(int j = R.j0; j < R.jlim; j++){
@@ -37,11 +37,14 @@ int main (int argc, char** argv){
 		// }
 		// cout << endl << endl;
 
-		utility::edgeDetection(src,tgt1,SOBEL,150,R);
-		tgt1.save("test1.pgm");
+		utility::edgeDetection(src,tgt1,SOBEL,200,R);
+		tgt1.save("test_3.pgm");
 
-		utility::directionDectection(tgt1,tgt2,SOBEL,45,R);
-		tgt2.save("test2.pgm");
+		utility::edgeDetection(src,tgt2,SOBEL5,600,R);
+		tgt2.save("test_5.pgm");
+
+		// utility::directionDectection(tgt1,tgt2,SOBEL,45,R);
+		// tgt2.save("test2.pgm");
 
 		// vector<vector<int>> delta = utility::applyMask(SOBEL_I,src,R);
 		// for(int i = 0; i < delta.size(); i++){

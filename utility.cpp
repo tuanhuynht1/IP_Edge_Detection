@@ -46,6 +46,24 @@ vector<vector<int>> utility::getMask(mask_type m){
 			{{-1,0,1},
 			{-2,0,2},
 			{-1,0,1}};
+	 
+		case SOBEL5_I:
+			return
+			{{2,2,4,2,2},
+			{1,1,2,1,1},
+			{0,0,0,0,0,},
+			{-1,-1,-2,-1,-1},
+			{-2,-2,-4,-2,-2}};
+		case SOBEL5_J:
+			return
+			{{-2,-1,0,1,2},
+			{-2,-1,0,1,2},
+			{-4,-2,0,2,4},
+			{-2,-1,0,1,2},
+			{-2,-1,0,1,2}};
+
+		default:
+			return {};
 	}
 }
 
@@ -60,8 +78,8 @@ vector<vector<int>> utility::applyMask(mask_type m, image& src, Region roi){
 
 
 
-	for(int i = 0; i < 3; i++){
-		for(int j = 0; j < 3; j++){
+	for(int i = 0; i < M.size(); i++){
+		for(int j = 0; j < M[0].size(); j++){
 			cout << M[i][j] << " ";
 		}
 		cout << endl;
@@ -111,11 +129,18 @@ void utility::edgeDetection(image& src, image& tgt, mask_type m, int threshold, 
 		//apply horizontal mask
 		jDelta = applyMask(SOBEL_J,src,roi);
 		break;
+
+	case SOBEL5:
+		//apply verticle mask
+		iDelta = applyMask(SOBEL5_I,src,roi);
+
+		//apply horizontal mask
+		jDelta = applyMask(SOBEL5_J,src,roi);
+		break;
 	
 	default:
 		return;
 	}
-	
 
 	//calculate magnitude
 	vector<vector<float>> amplitude(roi.ilen, vector<float>(roi.jlen));

@@ -7,7 +7,7 @@
 #include <math.h>
 #include <string.h>
 
-enum mask_type {SOBEL_J= 0, SOBEL_I = 1, SOBEL = 2};
+enum mask_type {SOBEL, SOBEL_J , SOBEL_I, SOBEL5, SOBEL5_J, SOBEL5_I};
 
 
 class utility
