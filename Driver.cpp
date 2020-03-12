@@ -25,19 +25,19 @@ int main (int argc, char** argv){
 		// exit(1);
 
 		cout << "TESTING\n" << endl;
-		Region R(150,150,5,5);
+		Region R(100,150,250,250);
 		image src, tgt;
 		src.read(strdup("tree.pgm"));
 
-		for(int i = R.i0; i < R.ilim; i++){
-			for(int j = R.j0; j < R.jlim; j++){
-				cout << src.getPixel(i,j) << " ";
-			}
-			cout << endl;
-		}
-		cout << endl << endl;
+		// for(int i = R.i0; i < R.ilim; i++){
+		// 	for(int j = R.j0; j < R.jlim; j++){
+		// 		cout << src.getPixel(i,j) << " ";
+		// 	}
+		// 	cout << endl;
+		// }
+		// cout << endl << endl;
 
-		utility::sobelEdgeDetection(src,tgt,0,R);
+		utility::sobelEdgeDetection(src,tgt,300,R);
 
 		// vector<vector<int>> delta = utility::applyMask(SOBEL_I,src,R);
 		// for(int i = 0; i < delta.size(); i++){

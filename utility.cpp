@@ -1,4 +1,5 @@
 #include "utility.h"
+#include <cmath>
 
 #define MAXRGB 255
 #define MINRGB 0
@@ -96,25 +97,51 @@ vector<vector<int>> utility::applyMask(mask_type m, image& src, Region roi){
 }
 
 void utility::sobelEdgeDetection(image& src, image& tgt, int threshold, Region roi){
+	//copy src image to tgt
 	tgt.copyImage(src);
+
+	//apply verticle mask
 	vector<vector<int>> iDelta = applyMask(SOBEL_I,src,roi);
+	// for(int i = 0; i < iDelta.size(); i++){
+	// 	for(int j = 0; j < iDelta[0].size(); j++){
+	// 		cout << iDelta[i][j] << " ";
+	// 	}
+	// 	cout << endl;
+	// }
+	// cout << endl;
 
-	for(int i = 0; i < iDelta.size(); i++){
-		for(int j = 0; j < iDelta[0].size(); j++){
-			cout << iDelta[i][j] << " ";
-		}
-		cout << endl;
-	}
-	cout << endl;
-
+	//apply horizontal mask
 	vector<vector<int>> jDelta = applyMask(SOBEL_J,src,roi);
+	// for(int i = 0; i < jDelta.size(); i++){
+	// 	for(int j = 0; j < jDelta[0].size(); j++){
+	// 		cout << jDelta[i][j] << " ";
+	// 	}
+	// 	cout << endl;
+	// }
+	// cout << endl;
 
-	for(int i = 0; i < jDelta.size(); i++){
-		for(int j = 0; j < jDelta[0].size(); j++){
-			cout << jDelta[i][j] << " ";
+	//calculate magnitude
+	vector<vector<float>> amplitude(roi.ilen, vector<float>(roi.jlen));
+	for(int i = 0; i < amplitude.size(); i++){
+		for(int j = 0; j < amplitude[0].size(); j++){
+			// sqrt (iDelta^2 + jDelta^2)
+			amplitude[i][j] = sqrt((pow(iDelta[i][j],2)+pow(jDelta[i][j],2)));
+			// cout << amplitude[i][j] << " ";
 		}
-		cout << endl;
+		// cout << endl;
 	}
-	cout << endl;
+
+	//thresholding
+	for(int i = roi.i0; i < roi.ilim; i++){
+		for(int j = roi.j0; j < roi.jlim; j++){
+			if(amplitude[i-roi.i0][j-roi.j0] < threshold){
+				tgt.setPixel(i,j,MINRGB);
+			}
+			else{
+				tgt.setPixel(i,j,MAXRGB);
+			}
+		}
+	}
+	tgt.save("test.pgm");
 
 }
