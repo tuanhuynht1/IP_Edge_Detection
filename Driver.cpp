@@ -1,5 +1,5 @@
 /************************************************************
-*	Advanced image and color manipulation					*
+*	  Edge Dectection IPTOOLS							    *
 *		Author: Tuan Huynh									*
  ************************************************************/
 
@@ -25,10 +25,39 @@ int main (int argc, char** argv){
 		// exit(1);
 
 		cout << "TESTING\n" << endl;
+		Region R(150,150,5,5);
+		image src, tgt;
+		src.read(strdup("tree.pgm"));
+
+		for(int i = R.i0; i < R.ilim; i++){
+			for(int j = R.j0; j < R.jlim; j++){
+				cout << src.getPixel(i,j) << " ";
+			}
+			cout << endl;
+		}
+		cout << endl << endl;
+
+		utility::sobelEdgeDetection(src,tgt,0,R);
+
+		// vector<vector<int>> delta = utility::applyMask(SOBEL_I,src,R);
+		// for(int i = 0; i < delta.size(); i++){
+		// 	for(int j = 0; j < delta[0].size(); j++){
+		// 		cout << delta[i][j] << " ";
+		// 	}
+		// 	cout << endl;
+		// }
+
+
+
+
+
+
+
 
 		exit(1);
 	}
-	cout << "hi" << endl;
+
+
 	vector<char*> argV;
 	int rows, cols, i_origin, j_origin, number_of_regions;
 	string name, op;
