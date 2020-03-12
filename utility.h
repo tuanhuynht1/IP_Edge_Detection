@@ -7,7 +7,7 @@
 #include <math.h>
 #include <string.h>
 
-enum mask_type {SOBEL_J= 0, SOBEL_I = 1};
+enum mask_type {SOBEL_J= 0, SOBEL_I = 1, SOBEL = 2};
 
 
 class utility
@@ -28,9 +28,10 @@ class utility
 		//apply mask
 		static vector<vector<int>> applyMask(mask_type mask, image& src, Region roi);
 
-		//sobel 3x3
-		static void sobelEdgeDetection(image& src, image& tgt, int threshold, Region roi);
+		//sobel amplitude 
+		static void sobelEdgeDetection(image& src, image& tgt, mask_type m, int threshold, Region roi);
 
+		// static void directionalEdgeDectection(image& src, float degree, Region roi);
 };
 
 
