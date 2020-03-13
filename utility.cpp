@@ -250,5 +250,19 @@ void utility::splitRGB(image& src, image& red, image& green, image& blue){
 
 }
 
+void utility::mergePPM(image& ppmImg, image& binImg, image& tgt){
+	tgt.copyImage(ppmImg);
+	for(int i = 0; i < ppmImg.getNumberOfRows(); i++){
+		for(int j = 0; j < ppmImg.getNumberOfColumns(); j++){
+			int val = binImg.getPixel(i,j);
+			if( val == MINRGB || val == MAXRGB){
+				tgt.setPixel(i,j,RED,val);
+				tgt.setPixel(i,j,GREEN,val);
+				tgt.setPixel(i,j,BLUE,val);
+			}
+		}
+	}
+}
+
 
 

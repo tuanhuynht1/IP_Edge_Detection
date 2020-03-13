@@ -25,14 +25,28 @@ int main (int argc, char** argv){
 		// exit(1);
 
 		cout << "TESTING\n" << endl;
-		Region R(50,50,350,350);
+		Region R(0,150,300,300);
 		image src, tgt1, tgt2, r, g, b;
 		src.read(strdup("frog.ppm"));
 
 		utility::splitRGB(src,r,g,b);
-		r.save("red.pgm");
-		g.save("green.pgm");
-		b.save("blue.pgm");
+
+		utility::edgeDetection(r,tgt1,SOBEL,100,R);
+		tgt1.save("red.pgm");
+		cout << "done" << endl;
+
+		utility::edgeDetection(g,tgt1,SOBEL,100,R);
+		tgt1.save("green.pgm");
+		cout << "done" << endl;
+
+		utility::mergePPM(src,tgt1,tgt2);
+		tgt2.save("merge.ppm");
+
+		utility::edgeDetection(b,tgt1,SOBEL,100,R);
+		tgt1.save("blue.pgm");
+		cout << "done" << endl;
+
+	
 		
 
 		// utility::edgeDetection(src,tgt1,SOBEL,300,R);

@@ -37,6 +37,10 @@ class utility
 		//RGB to greyscale
 		static void splitRGB(image& src, image& red, image& green, image& blue);
 
+		//combine back to PPM
+		static void mergePPM(image& ppmImg, image& binImg, image& tgt);
+
+
 };
 
 
