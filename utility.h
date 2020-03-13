@@ -33,6 +33,10 @@ class utility
 
 		//direction detection
 		static void directionDectection(image& src, image& tgt, mask_type m, float degree, Region roi);
+
+		//RGB to greyscale
+		static void splitRGB(image& src, image& red, image& green, image& blue);
+
 };
 
 

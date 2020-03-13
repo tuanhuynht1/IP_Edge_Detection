@@ -25,23 +25,21 @@ int main (int argc, char** argv){
 		// exit(1);
 
 		cout << "TESTING\n" << endl;
-		Region R(50,50,300,300);
-		image src, tgt1, tgt2;
-		src.read(strdup("lena.pgm"));
+		Region R(50,50,350,350);
+		image src, tgt1, tgt2, r, g, b;
+		src.read(strdup("frog.ppm"));
 
-		// for(int i = R.i0; i < R.ilim; i++){
-		// 	for(int j = R.j0; j < R.jlim; j++){
-		// 		cout << src.getPixel(i,j) << " ";
-		// 	}
-		// 	cout << endl;
-		// }
-		// cout << endl << endl;
+		utility::splitRGB(src,r,g,b);
+		r.save("red.pgm");
+		g.save("green.pgm");
+		b.save("blue.pgm");
+		
 
-		utility::edgeDetection(src,tgt1,SOBEL5,600,R);
-		tgt1.save("test_5.pgm");
+		// utility::edgeDetection(src,tgt1,SOBEL,300,R);
+		// tgt1.save("test_5.pgm");
 
-		utility::directionDectection(tgt1,tgt2,SOBEL5,45,R);
-		tgt2.save("test_5_dir.pgm");
+		// utility::directionDectection(tgt1,tgt2,SOBEL,-135,R);
+		// tgt2.save("test_5_dir.pgm");
 
 		// utility::directionDectection(tgt1,tgt2,SOBEL,45,R);
 		// tgt2.save("test2.pgm");

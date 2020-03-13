@@ -78,13 +78,13 @@ vector<vector<int>> utility::applyMask(mask_type m, image& src, Region roi){
 
 
 
-	for(int i = 0; i < M.size(); i++){
-		for(int j = 0; j < M[0].size(); j++){
-			cout << M[i][j] << " ";
-		}
-		cout << endl;
-	}
-	cout << endl;
+	// for(int i = 0; i < M.size(); i++){
+	// 	for(int j = 0; j < M[0].size(); j++){
+	// 		cout << M[i][j] << " ";
+	// 	}
+	// 	cout << endl;
+	// }
+	// cout << endl;
 
 
 
@@ -192,28 +192,62 @@ void utility::directionDectection(image& src, image& tgt, mask_type m, float deg
 		return;
 	}
 
+
+	for(int i = 0; i < roi.ilen; i++){
+		for(int j = 0; j < roi.jlen; j++){
+			// cout << iDelta[i][j] << "\t";
+		}
+		// cout << endl;
+	}
+	// cout << endl;
+	for(int i = 0; i < roi.ilen; i++){
+		for(int j = 0; j < roi.jlen; j++){
+			// cout << jDelta[i][j] << "\t";
+		}
+		// cout << endl;
+	}
+	// cout << endl;
+
 	//calculate direction
 	vector<vector<float>> direction(roi.ilen, vector<float>(roi.jlen));
 	for(int i = 0; i < direction.size(); i++){
 		for(int j = 0; j < direction[0].size(); j++){
 			//arctan2(di/dj) * degree conversion
-			direction[i][j] = atan2(jDelta[i][j],iDelta[i][j]) * 180/3.14159;
-			// cout << direction[i][j] << " ";
+			direction[i][j] = atan2(iDelta[i][j],jDelta[i][j]) * 180.0/3.14159;
+			// cout << direction[i][j] << "\t";
 		}
 		// cout << endl;
 	}
+	// cout << endl;
 
 	//thresholding
 	for(int i = roi.i0; i < roi.ilim; i++){
 		for(int j = roi.j0; j < roi.jlim; j++){
-			if(direction[i-roi.i0][j-roi.j0] >= (-1*degree) -10 && direction[i-roi.i0][j-roi.j0] <= (-1*degree) + 10 ){
+			if( direction[i-roi.i0][j-roi.j0] >= degree - 10 && direction[i-roi.i0][j-roi.j0] <= degree + 10 ){
 				tgt.setPixel(i,j,MAXRGB);
+				// cout << direction[i-roi.i0][j-roi.j0] << " ";
 			}
 			else{
 				tgt.setPixel(i,j,MINRGB);
 			}
 		}
 	}
+}
+
+void utility::splitRGB(image& src, image& red, image& green, image& blue){
+	int rows = src.getNumberOfRows(), cols = src.getNumberOfColumns();
+	red.resize(rows,cols);
+	green.resize(rows,cols);
+	blue.resize(rows,cols);
+
+	for(int i = 0 ; i < rows; i++){
+		for(int j = 0; j < cols; j++){
+			red.setPixel(i,j,src.getPixel(i,j,RED));
+			green.setPixel(i,j,src.getPixel(i,j,GREEN));
+			blue.setPixel(i,j,src.getPixel(i,j,BLUE));
+		}
+	}
+
 }
 
 
