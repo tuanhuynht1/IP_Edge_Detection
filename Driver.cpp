@@ -35,18 +35,19 @@ int main (int argc, char** argv){
 		tgt1.save("red.pgm");
 		cout << "done" << endl;
 
-		utility::edgeDetection(g,tgt1,SOBEL,100,R);
-		tgt1.save("green.pgm");
-		cout << "done" << endl;
+		// utility::edgeDetection(g,tgt1,SOBEL,100,R);
+		// tgt1.save("green.pgm");
+		// cout << "done" << endl;
 
-		utility::mergePPM(src,tgt1,tgt2);
+		utility::mergePPM(src,tgt1,tgt2,R);
 		tgt2.save("merge.ppm");
 
-		utility::edgeDetection(b,tgt1,SOBEL,100,R);
-		tgt1.save("blue.pgm");
-		cout << "done" << endl;
+		// utility::edgeDetection(b,tgt1,SOBEL,100,R);
+		// tgt1.save("blue.pgm");
+		// cout << "done" << endl;
 
-	
+		// utility::combineRGBEdge(r,g,b,tgt1);
+		// tgt1.save("comb.pgm");
 		
 
 		// utility::edgeDetection(src,tgt1,SOBEL,300,R);

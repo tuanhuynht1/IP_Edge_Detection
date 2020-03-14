@@ -38,7 +38,10 @@ class utility
 		static void splitRGB(image& src, image& red, image& green, image& blue);
 
 		//combine back to PPM
-		static void mergePPM(image& ppmImg, image& binImg, image& tgt);
+		static void mergePPM(image& ppmImg, image& binImg, image& tgt, Region roi);
+
+		//combine separate channel edges
+		static void combineRGBEdge(image& r, image& g, image& b, image& tgt);
 
 
 };
