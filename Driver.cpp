@@ -25,15 +25,14 @@ int main (int argc, char** argv){
 		// exit(1);
 
 		cout << "TESTING\n" << endl;
-		Region R(0,150,300,300);
+		Region R(0,150,250,300);
 		image src, tgt1, tgt2, tgt3, tgt4, r, g, b;
 		src.read(strdup("frog.ppm"));
 
 		utility::splitRGB(src,r,g,b);
-		
-		utility::edgeDetection(r,tgt1,SOBEL,100,R);
-		utility::edgeDetection(g,tgt2,SOBEL,100,R);
-		utility::edgeDetection(b,tgt3,SOBEL,100,R);
+		utility::thresholdDetection(r,tgt1,SOBEL,40,R);
+		utility::thresholdDetection(g,tgt2,SOBEL,40,R);
+		utility::thresholdDetection(b,tgt3,SOBEL,40,R);
 
 		utility::combineRGBEdge(tgt1,tgt2,tgt3,tgt4,R);
 		tgt4.save("OR.pgm");
@@ -42,31 +41,7 @@ int main (int argc, char** argv){
 		tgt1.save("comb.ppm");
 		
 
-		// utility::edgeDetection(b,tgt1,SOBEL,100,R);
-		// tgt1.save("blue.pgm");
-		// cout << "done" << endl;
-
-		// utility::combineRGBEdge(r,g,b,tgt1);
-		// tgt1.save("comb.pgm");
-		
-
-		// utility::edgeDetection(src,tgt1,SOBEL,300,R);
-		// tgt1.save("test_5.pgm");
-
-		// utility::directionDectection(tgt1,tgt2,SOBEL,-135,R);
-		// tgt2.save("test_5_dir.pgm");
-
-		// utility::directionDectection(tgt1,tgt2,SOBEL,45,R);
-		// tgt2.save("test2.pgm");
-
-		// vector<vector<int>> delta = utility::applyMask(SOBEL_I,src,R);
-		// for(int i = 0; i < delta.size(); i++){
-		// 	for(int j = 0; j < delta[0].size(); j++){
-		// 		cout << delta[i][j] << " ";
-		// 	}
-		// 	cout << endl;
-		// }
-
+	
 
 
 

@@ -18,30 +18,22 @@ class utility
 		static std::string intToString(int number);
 		static int checkValue(int value);
 		
-		//parse helper function
+		//parsing tools
 		static vector<char*> parse(char* str, int argc);
 
-
-		//get mask 
+		//masking tools
 		static vector<vector<int>> getMask(mask_type m);
-
-		//apply mask
 		static vector<vector<int>> applyMask(mask_type mask, image& src, Region roi);
 
-		//amplitude detection 
-		static void edgeDetection(image& src, image& tgt, mask_type m, int threshold, Region roi);
-
-		//direction detection
+		//greyscale edge detection tools
+		static void amplitudeDetection(image& src, image& tgt, mask_type m, Region roi);
+		static void thresholdDetection(image& src, image& tgt, mask_type m, int threshold, Region roi);
 		static void directionDectection(image& src, image& tgt, mask_type m, float degree, Region roi);
 
-		//RGB to greyscale
+		//color image edge detection tools
 		static void splitRGB(image& src, image& red, image& green, image& blue);
-
-		//combine back to PPM
-		static void mergePPM(image& ppmImg, image& binImg, image& tgt, Region roi);
-
-		//combine separate channel edges
 		static void combineRGBEdge(image& r, image& g, image& b, image& tgt, Region roi);
+		static void mergePPM(image& ppmImg, image& binImg, image& tgt, Region roi);
 
 
 };

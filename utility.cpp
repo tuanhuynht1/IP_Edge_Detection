@@ -114,7 +114,7 @@ vector<vector<int>> utility::applyMask(mask_type m, image& src, Region roi){
 
 }
 
-void utility::edgeDetection(image& src, image& tgt, mask_type m, int threshold, Region roi){
+void utility::amplitudeDetection(image& src, image& tgt, mask_type m, Region roi){
 	//copy src image to tgt
 	tgt.copyImage(src);
 
@@ -142,19 +142,39 @@ void utility::edgeDetection(image& src, image& tgt, mask_type m, int threshold, 
 		return;
 	}
 
-	//calculate magnitude
+	float maxAmp = 0;
+
+	//calculate amplitude
 	vector<vector<float>> amplitude(roi.ilen, vector<float>(roi.jlen));
 	for(int i = 0; i < amplitude.size(); i++){
 		for(int j = 0; j < amplitude[0].size(); j++){
 			// sqrt (iDelta^2 + jDelta^2)
 			amplitude[i][j] = sqrt((pow(iDelta[i][j],2)+pow(jDelta[i][j],2)));
+			// update upper bound for normalizing later
+			maxAmp = amplitude[i][j] > maxAmp ? amplitude[i][j] : maxAmp;
+		}
+	}
+	//normalizing constant
+	float K = MAXRGB / maxAmp;
+
+	//update pixel with normalized value
+	for(int i = roi.i0; i < roi.ilim; i++){
+		for(int j = roi.j0; j < roi.jlim; j++){
+			int val = checkValue(amplitude[i-roi.i0][j-roi.j0] * K); 
+			tgt.setPixel(i,j,val);
 		}
 	}
 
+
+}
+
+void utility::thresholdDetection(image& src, image& tgt, mask_type m, int threshold, Region roi){
+	
+	amplitudeDetection(src,tgt,m,roi);
 	//thresholding
 	for(int i = roi.i0; i < roi.ilim; i++){
 		for(int j = roi.j0; j < roi.jlim; j++){
-			if(amplitude[i-roi.i0][j-roi.j0] < threshold){
+			if(tgt.getPixel(i,j) < threshold){
 				tgt.setPixel(i,j,MINRGB);
 			}
 			else{
@@ -162,6 +182,7 @@ void utility::edgeDetection(image& src, image& tgt, mask_type m, int threshold, 
 			}
 		}
 	}
+	
 }
 
 void utility::directionDectection(image& src, image& tgt, mask_type m, float degree, Region roi){
