@@ -250,22 +250,16 @@ void utility::splitRGB(image& src, image& red, image& green, image& blue){
 
 }
 
-void utility::combineRGBEdge(image& r, image& g, image& b, image& tgt){
+void utility::combineRGBEdge(image& r, image& g, image& b, image& tgt, Region roi){
 	tgt.copyImage(r);
-	for(int i = 0; i < tgt.getNumberOfRows(); i++){
-		for(int j = 0; j < tgt.getNumberOfColumns(); j++){
+	for(int i = roi.i0; i < roi.ilim; i++){
+		for(int j = roi.j0; j < roi.jlim; j++){
 
-			if( 
-				(r.getPixel(i,j) == MINRGB || r.getPixel(i,j) == MAXRGB) &&
-				(g.getPixel(i,j) == MINRGB || g.getPixel(i,j) == MAXRGB) &&
-				(b.getPixel(i,j) == MINRGB || b.getPixel(i,j) == MAXRGB)
-			){
-				if( r.getPixel(i,j) == MAXRGB ||  g.getPixel(i,j) == MAXRGB ||  b.getPixel(i,j) == MAXRGB){
-					tgt.setPixel(i,j,MAXRGB);
-				}
-				else{
-					tgt.setPixel(i,j,MINRGB);
-				}
+			if(r.getPixel(i,j) == MAXRGB || g.getPixel(i,j) == MAXRGB || b.getPixel(i,j)){
+				tgt.setPixel(i,j,MAXRGB);
+			}
+			else{
+				tgt.setPixel(i,j,MINRGB);
 			}
 
 		}
@@ -285,4 +279,12 @@ void utility::mergePPM(image& ppmImg, image& binImg, image& tgt, Region roi){
 }
 
 
+// utility::edgeDetection(r,tgt1,SOBEL,100,R);
+// 		utility::edgeDetection(g,tgt2,SOBEL,100,R);
+// 		utility::edgeDetection(b,tgt3,SOBEL,100,R);
 
+// 		utility::combineRGBEdge(tgt1,tgt2,tgt3,tgt4,R);
+// 		tgt4.save("OR.pgm");
+// 		utility::mergePPM(src,tgt4,tgt1,R);
+
+// 		tgt1.save("comb.ppm");

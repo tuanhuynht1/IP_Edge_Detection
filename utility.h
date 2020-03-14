@@ -41,7 +41,7 @@ class utility
 		static void mergePPM(image& ppmImg, image& binImg, image& tgt, Region roi);
 
 		//combine separate channel edges
-		static void combineRGBEdge(image& r, image& g, image& b, image& tgt);
+		static void combineRGBEdge(image& r, image& g, image& b, image& tgt, Region roi);
 
 
 };
