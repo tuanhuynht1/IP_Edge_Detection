@@ -447,15 +447,37 @@ vector<double> image::HSItoRGB(double h, double s, double i){
 
 void image::convertToHSI(){
 	if(HSI == true){
+		cout << "Already in HSI" << endl;
 		return;
 	}
 
 	for(int i = 0; i < data.numRows; i++){
 		for(int j = 0; j < data.numColumns; j++){
+			//get rgb values
 			int r = getPixel(i,j,RED);
 			int g = getPixel(i,j,GREEN);
 			int b = getPixel(i,j,BLUE);
-			// vector<double> hsi = utility::RGB
+			// cout <<"before " << r << " " << g << " " << b << endl;
+			//convert to hsi
+			vector<double> hsi = RGBtoHSI(r,g,b);
+			// denormalize hsi values
+			// cout << hsi[HUE] << " " << hsi[SATURATION] << " " << hsi[INTENSITY] << endl;
+			int H = round(hsi[HUE] * 180.0 / M_PI);
+			int S = round(hsi[SATURATION]*100);
+			int I = round(hsi[INTENSITY]);
+			
+			setPixel(i,j,HUE,H);
+			setPixel(i,j,SATURATION,S);
+			setPixel(i,j,INTENSITY,I);
+
+			// cout << getPixel(i,j,HUE) << " ";
+			// cout << getPixel(i,j,SATURATION) << " ";
+			// cout << getPixel(i,j,INTENSITY) << endl;
+
+
+			// cout << h << " " << s << " " << i << endl;
+			// vector<double>rgb = HSItoRGB(h*M_PI/180.0,s/100.0,i);
+			// cout << rgb[RED] << " " << rgb[GREEN] << " " << rgb[BLUE] << endl;
 		}
 	}
 
