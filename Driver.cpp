@@ -32,17 +32,13 @@ int main (int argc, char** argv){
 		src.read(strdup("frog.ppm"));
 
 
-		vector<double> hsi = utility::RGBtoHSI(200,100,30);
+		vector<double> hsi = image::RGBtoHSI(200,100,30);
 		cout << hsi[HUE] << " " << hsi[SATURATION] << " " << hsi[INTENSITY] << endl;
-		vector<double> rgb = utility::HSItoRGB(hsi[HUE],hsi[SATURATION],hsi[INTENSITY]);
+		vector<double> rgb = image::HSItoRGB(hsi[HUE],hsi[SATURATION],hsi[INTENSITY]);
 		cout << rgb[RED] << " " << rgb[GREEN] << " " << rgb[BLUE] << endl;
 
 
 		
-
-
-
-
 
 		exit(1);
 	}

@@ -290,58 +290,7 @@ void utility::mergePPM(image& ppmImg, image& binImg, image& tgt, Region roi){
 }
 
 
-vector<double> utility::RGBtoHSI(double r, double g, double b){
 
-	double i = (r + g + b) / 3.0;
-
-	double rn = r / (r + g + b);
-	double gn = g / (r + g + b);
-	double bn = b / (r + g + b);
-
-	double h = acos((0.5 * ((rn - gn) + (rn - bn))) / (sqrt((rn - gn) * (rn - gn) + (rn - bn) * (gn - bn))));
-	if(b > g)
-	{
-		h = 2 * M_PI - h;	
-	}
-
-	double s = 1 - 3 * min(rn, min(gn, bn));
-
-	return {h,s,i};
-}
-
-vector<double> utility::HSItoRGB(double h, double s, double i){
-
-	double x = i * (1 - s);
-	double r, g, b;
-	// For black, white and grayscale h is NaN. Conversion works incorrectly.
-	if(std::isnan(h))
-	{
-	  r = i;
-	  g = i;
-	  b = i;
-	}
-	else if(h < 2 * M_PI / 3)
-	{
-		double y = i * (1 + (s * cos(h)) / (cos(M_PI / 3 - h)));
-		double z = 3 * i - (x + y);
-		b = x; r = y; g = z;
-	}
-	else if(h < 4 * M_PI / 3)
-	{
-		double y = i * (1 + (s * cos(h - 2 * M_PI / 3)) / (cos(M_PI / 3 - (h  - 2 * M_PI / 3))));
-		double z = 3 * i - (x + y);
-		r = x; g = y; b = z;
-	}
-	else
-	{
-		double y = i * (1 + (s * cos(h - 4 * M_PI / 3)) / (cos(M_PI / 3 - (h  - 4 * M_PI / 3))));
-		double z = 3 * i - (x + y);
-		r = z; g = x; b = y;
-	}
-
-	
-	return {r,g,b};
-}
 
 
 // utility::edgeDetection(r,tgt1,SOBEL,100,R);

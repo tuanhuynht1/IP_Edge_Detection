@@ -34,9 +34,10 @@ struct Color{
 class image 
 {
 private:
+   bool HSI = false;
    imageData data;
    int getint(FILE *fp);
-   friend class Utility;
+   friend class utility;
    
 public:
    image();
@@ -51,6 +52,7 @@ public:
    void setNumberOfColumns(int columns);
    void setPixel(const int row, const int col, const int value);
    void setPixel(const int row, const int col, const int rgb, const int value);
+
    
    int getPixel(const int row, const int col);
    int getPixel(const int row, const int col, const int rgb);
@@ -64,6 +66,11 @@ public:
    bool read (char* file);
    bool isInbounds (const int row, const int col);
 
+
+   static vector<double> RGBtoHSI(double R, double G, double B);
+   static vector<double> HSItoRGB(double H, double S, double I);
+   void convertToHSI();
+   void convertToRGB();
 
 };
 
