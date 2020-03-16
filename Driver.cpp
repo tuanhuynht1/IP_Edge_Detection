@@ -29,18 +29,18 @@ int main (int argc, char** argv){
 		image src, tgt1, tgt2, tgt3, tgt4, r, g, b;
 		src.read(strdup("frog.ppm"));
 
-		utility::splitRGB(src,r,g,b);
-		utility::thresholdDetection(r,tgt1,SOBEL,40,R);
-		utility::thresholdDetection(g,tgt2,SOBEL,40,R);
-		utility::thresholdDetection(b,tgt3,SOBEL,40,R);
+		// utility::splitRGB(src,r,g,b);
+		// utility::thresholdDetection(r,tgt1,SOBEL,40,R);
+		// utility::thresholdDetection(g,tgt2,SOBEL,40,R);
+		// utility::thresholdDetection(b,tgt3,SOBEL,40,R);
 
-		utility::combineRGBEdge(tgt1,tgt2,tgt3,tgt4,R);
-		tgt4.save("OR.pgm");
-		utility::mergePPM(src,tgt4,tgt1,R);
+		// utility::combineRGBEdge(tgt1,tgt2,tgt3,tgt4,R);
+		// tgt4.save("OR.pgm");
+		// utility::mergePPM(src,tgt4,tgt1,R);
 
-		tgt1.save("comb.ppm");
+		// tgt1.save("comb.ppm");
 		
-
+		utility::RGBtoHSI(20,30,102);
 	
 
 

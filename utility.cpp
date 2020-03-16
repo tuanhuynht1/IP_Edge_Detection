@@ -1,5 +1,6 @@
 #include "utility.h"
 #include <cmath>
+#include <algorithm>
 
 #define MAXRGB 255
 #define MINRGB 0
@@ -297,6 +298,26 @@ void utility::mergePPM(image& ppmImg, image& binImg, image& tgt, Region roi){
 			tgt.setPixel(i,j,BLUE,val);
 		}
 	}
+}
+
+
+vector<float> utility::RGBtoHSI(int r, int g, int b){
+	float I = (1/3.0)*(r+g+b);
+	cout << I << endl;
+	float rn = (float)r / (r + g + b);
+	float gn = (float)g / (r + g + b);
+	float bn = (float)b / (r + g + b);
+	// cout << rnorm << " " << gnorm << " " << bnorm << endl;
+	float H = acos((0.5 * ((rn - gn) + (rn - bn))) / (sqrt((rn - gn) * (rn - gn) + (rn - bn) * (gn - bn))));
+	if(b > g)
+	{
+		H = 2 * 3.14159 - H;	
+	}
+
+	cout << H << endl;
+	float S = 1 - 3 * min(rn, min(gn, bn));
+	cout << S << endl;
+	return {H,S,I};
 }
 
 

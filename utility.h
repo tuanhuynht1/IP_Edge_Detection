@@ -30,10 +30,13 @@ class utility
 		static void thresholdDetection(image& src, image& tgt, mask_type m, int threshold, Region roi);
 		static void directionDectection(image& src, image& tgt, mask_type m, float degree, Region roi);
 
-		//color image edge detection tools
+		//RGB color image edge detection tools
 		static void splitRGB(image& src, image& red, image& green, image& blue);
 		static void combineRGBEdge(image& r, image& g, image& b, image& tgt, Region roi);
 		static void mergePPM(image& ppmImg, image& binImg, image& tgt, Region roi);
+
+		//HSI color image edge detection tools
+		static vector<float> RGBtoHSI(int r, int g, int b);
 
 
 };
