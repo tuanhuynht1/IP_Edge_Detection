@@ -38,7 +38,8 @@ int main (int argc, char** argv){
 		// cout << rgb[RED] << " " << rgb[GREEN] << " " << rgb[BLUE] << endl;
 
 		src.convertToHSI();
-		src.save("hsi.ppm");
+		src.convertToRGB();
+		src.save("converted.ppm");
 
 		
 
