@@ -28,7 +28,7 @@ int main (int argc, char** argv){
 
 		cout << "TESTING\n" << endl;
 		Region R(0,150,250,300);
-		image src, tgt1, tgt2, tgt3, tgt4;
+		image src, tgt1, tgt2, tgt3, tgt4, h, s, i;
 		src.read(strdup("frog.ppm"));
 
 
@@ -37,9 +37,10 @@ int main (int argc, char** argv){
 		// vector<double> rgb = image::HSItoRGB(hsi[HUE],hsi[SATURATION],hsi[INTENSITY]);
 		// cout << rgb[RED] << " " << rgb[GREEN] << " " << rgb[BLUE] << endl;
 
-		src.convertToHSI();
-		src.convertToRGB();
-		src.save("converted.ppm");
+		utility::splitHSI(src,h,s,i);
+		h.save("h.pgm");
+		s.save("s.pgm");
+		i.save("i.pgm");		
 
 		
 

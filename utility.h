@@ -36,7 +36,8 @@ class utility
 		static void mergePPM(image& ppmImg, image& binImg, image& tgt, Region roi);
 
 		//HSI color image edge detection tools
-		
+		static void splitHSI(image& src, image& hue, image& sat, image& its);
+
 		
 
 };

@@ -289,7 +289,29 @@ void utility::mergePPM(image& ppmImg, image& binImg, image& tgt, Region roi){
 	}
 }
 
+void utility::splitHSI(image& src, image& hue, image& sat, image& its){
 
+	image hsi;
+	hsi.copyImage(src);
+	hsi.convertToHSI();
+
+	int rows = src.getNumberOfRows(), cols = src.getNumberOfColumns();
+	hue.resize(rows,cols);
+	sat.resize(rows,cols);
+	its.resize(rows,cols);
+
+	double Hc = 255.0/360.0;
+	double Sc = 255.0/100.0;
+
+	for(int i = 0 ; i < rows; i++){
+		for(int j = 0; j < cols; j++){
+			hue.setPixel(i,j,hsi.getPixel(i,j,HUE)*Hc);
+			sat.setPixel(i,j,hsi.getPixel(i,j,SATURATION)*Sc);
+			its.setPixel(i,j,hsi.getPixel(i,j,INTENSITY));
+		}
+	}	
+
+}
 
 
 
