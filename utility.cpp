@@ -5,6 +5,7 @@
 #define MAXRGB 255
 #define MINRGB 0
 #define HISTO_SIZE 256
+#define PI 3.14159
 
 std::string utility::intToString(int number)
 {
@@ -78,17 +79,6 @@ vector<vector<int>> utility::applyMask(mask_type m, image& src, Region roi){
 	int offset = size/2;
 
 
-
-	// for(int i = 0; i < M.size(); i++){
-	// 	for(int j = 0; j < M[0].size(); j++){
-	// 		cout << M[i][j] << " ";
-	// 	}
-	// 	cout << endl;
-	// }
-	// cout << endl;
-
-
-
 	for(int i = roi.i0 + offset; i < roi.ilim - offset; i++){
 		for (int j = roi.j0 + offset; j < roi.jlim - offset; j++){
 			
@@ -112,7 +102,6 @@ vector<vector<int>> utility::applyMask(mask_type m, image& src, Region roi){
 	}
 	// cout << "done ";
 	return delta; 
-
 }
 
 void utility::amplitudeDetection(image& src, image& tgt, mask_type m, Region roi){
@@ -301,23 +290,57 @@ void utility::mergePPM(image& ppmImg, image& binImg, image& tgt, Region roi){
 }
 
 
-vector<float> utility::RGBtoHSI(int r, int g, int b){
-	float I = (1/3.0)*(r+g+b);
-	cout << I << endl;
-	float rn = (float)r / (r + g + b);
-	float gn = (float)g / (r + g + b);
-	float bn = (float)b / (r + g + b);
-	// cout << rnorm << " " << gnorm << " " << bnorm << endl;
-	float H = acos((0.5 * ((rn - gn) + (rn - bn))) / (sqrt((rn - gn) * (rn - gn) + (rn - bn) * (gn - bn))));
+vector<double> utility::RGBtoHSI(double r, double g, double b){
+
+	double i = (r + g + b) / 3.0;
+
+	double rn = r / (r + g + b);
+	double gn = g / (r + g + b);
+	double bn = b / (r + g + b);
+
+	double h = acos((0.5 * ((rn - gn) + (rn - bn))) / (sqrt((rn - gn) * (rn - gn) + (rn - bn) * (gn - bn))));
 	if(b > g)
 	{
-		H = 2 * 3.14159 - H;	
+		h = 2 * M_PI - h;	
 	}
 
-	cout << H << endl;
-	float S = 1 - 3 * min(rn, min(gn, bn));
-	cout << S << endl;
-	return {H,S,I};
+	double s = 1 - 3 * min(rn, min(gn, bn));
+
+	return {h,s,i};
+}
+
+vector<double> utility::HSItoRGB(double h, double s, double i){
+
+	double x = i * (1 - s);
+	double r, g, b;
+	// For black, white and grayscale h is NaN. Conversion works incorrectly.
+	if(std::isnan(h))
+	{
+	  r = i;
+	  g = i;
+	  b = i;
+	}
+	else if(h < 2 * M_PI / 3)
+	{
+		double y = i * (1 + (s * cos(h)) / (cos(M_PI / 3 - h)));
+		double z = 3 * i - (x + y);
+		b = x; r = y; g = z;
+	}
+	else if(h < 4 * M_PI / 3)
+	{
+		double y = i * (1 + (s * cos(h - 2 * M_PI / 3)) / (cos(M_PI / 3 - (h  - 2 * M_PI / 3))));
+		double z = 3 * i - (x + y);
+		r = x; g = y; b = z;
+	}
+	else
+	{
+		double y = i * (1 + (s * cos(h - 4 * M_PI / 3)) / (cos(M_PI / 3 - (h  - 4 * M_PI / 3))));
+		double z = 3 * i - (x + y);
+		r = z; g = x; b = y;
+	}
+
+	
+	return {r,g,b};
 }
 
 

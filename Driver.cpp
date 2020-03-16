@@ -8,10 +8,12 @@
 #include "statistics.h"
 #include <vector>
 #include <chrono>
+#include <algorithm>
 
 using namespace std;
 
 #define MAXLEN 256
+// #define M_PI 3.14159
 
 
 int main (int argc, char** argv){
@@ -26,24 +28,17 @@ int main (int argc, char** argv){
 
 		cout << "TESTING\n" << endl;
 		Region R(0,150,250,300);
-		image src, tgt1, tgt2, tgt3, tgt4, r, g, b;
+		image src, tgt1, tgt2, tgt3, tgt4;
 		src.read(strdup("frog.ppm"));
 
-		// utility::splitRGB(src,r,g,b);
-		// utility::thresholdDetection(r,tgt1,SOBEL,40,R);
-		// utility::thresholdDetection(g,tgt2,SOBEL,40,R);
-		// utility::thresholdDetection(b,tgt3,SOBEL,40,R);
 
-		// utility::combineRGBEdge(tgt1,tgt2,tgt3,tgt4,R);
-		// tgt4.save("OR.pgm");
-		// utility::mergePPM(src,tgt4,tgt1,R);
+		vector<double> hsi = utility::RGBtoHSI(200,100,30);
+		cout << hsi[HUE] << " " << hsi[SATURATION] << " " << hsi[INTENSITY] << endl;
+		vector<double> rgb = utility::HSItoRGB(hsi[HUE],hsi[SATURATION],hsi[INTENSITY]);
+		cout << rgb[RED] << " " << rgb[GREEN] << " " << rgb[BLUE] << endl;
 
-		// tgt1.save("comb.ppm");
+
 		
-		utility::RGBtoHSI(20,30,102);
-	
-
-
 
 
 

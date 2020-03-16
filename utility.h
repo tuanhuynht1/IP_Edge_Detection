@@ -36,8 +36,9 @@ class utility
 		static void mergePPM(image& ppmImg, image& binImg, image& tgt, Region roi);
 
 		//HSI color image edge detection tools
-		static vector<float> RGBtoHSI(int r, int g, int b);
-
+		static vector<double> RGBtoHSI(double R, double G, double B);
+		static vector<double> HSItoRGB(double H, double S, double I);
+		
 
 };
 

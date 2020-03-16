@@ -7,7 +7,7 @@
 
 using namespace std;
 
-enum channel{RED, GREEN, BLUE, GREY=RED, GRAY=GREY};
+enum channel{RED, GREEN, BLUE, GREY=RED, GRAY=GREY,HUE = RED, SATURATION = GREEN, INTENSITY = BLUE};
 
 struct imageData
 {
@@ -66,6 +66,8 @@ public:
 
 
 };
+
+
 
 #endif
 
