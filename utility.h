@@ -32,8 +32,8 @@ class utility
 
 		//RGB color image edge detection tools
 		static void splitRGB(image& src, image& red, image& green, image& blue);
-		static void combineRGBEdge(image& r, image& g, image& b, image& tgt, Region roi);
-		static void mergePPM(image& ppmImg, image& binImg, image& tgt, Region roi);
+		static void combineRGBEdge(image& r, image& g, image& b, image& tgt, vector<Region> R);
+		static void mergePPM(image& ppmImg, image& binImg, image& tgt, vector<Region> R);
 
 		//HSI color image edge detection tools
 		static void splitHSI(image& src, image& hue, image& sat, image& its);

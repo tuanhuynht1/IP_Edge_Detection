@@ -261,30 +261,35 @@ void utility::splitRGB(image& src, image& red, image& green, image& blue){
 
 }
 
-void utility::combineRGBEdge(image& r, image& g, image& b, image& tgt, Region roi){
+void utility::combineRGBEdge(image& r, image& g, image& b, image& tgt, vector<Region> R){
 	tgt.resize(r.getNumberOfRows(),r.getNumberOfColumns());
-	for(int i = roi.i0; i < roi.ilim; i++){
-		for(int j = roi.j0; j < roi.jlim; j++){
+	for(Region roi : R){
+		for(int i = roi.i0; i < roi.ilim; i++){
+			for(int j = roi.j0; j < roi.jlim; j++){
 
-			if(r.getPixel(i,j) == MAXRGB || g.getPixel(i,j) == MAXRGB || b.getPixel(i,j)){
-				tgt.setPixel(i,j,MAXRGB);
-			}
-			else{
-				tgt.setPixel(i,j,MINRGB);
-			}
+				if(r.getPixel(i,j) == MAXRGB || g.getPixel(i,j) == MAXRGB || b.getPixel(i,j)){
+					tgt.setPixel(i,j,MAXRGB);
+				}
+				else{
+					tgt.setPixel(i,j,MINRGB);
+				}
 
+			}
 		}
 	}
+
 }
 
-void utility::mergePPM(image& ppmImg, image& binImg, image& tgt, Region roi){
+void utility::mergePPM(image& ppmImg, image& binImg, image& tgt, vector<Region> R){
 	tgt.copyImage(ppmImg);
-	for(int i = roi.i0; i < roi.ilim; i++){
-		for(int j = roi.j0; j < roi.jlim; j++){
-			int val = binImg.getPixel(i,j);
-			tgt.setPixel(i,j,RED,val);
-			tgt.setPixel(i,j,GREEN,val);
-			tgt.setPixel(i,j,BLUE,val);
+	for(Region roi : R){
+		for(int i = roi.i0; i < roi.ilim; i++){
+			for(int j = roi.j0; j < roi.jlim; j++){
+				int val = binImg.getPixel(i,j);
+				tgt.setPixel(i,j,RED,val);
+				tgt.setPixel(i,j,GREEN,val);
+				tgt.setPixel(i,j,BLUE,val);
+			}
 		}
 	}
 }

@@ -189,9 +189,12 @@ int main (int argc, char** argv){
 		
 		//RGB threshold Detection//---------------------------------------------------------------------
 		else if(op.compare("RGBT") == 0){
-			image r, g, b, tgt, tgtR, tgtG, tgtB, tgtRGB;
+			image r, g, b, tgt, tgtRGB;
+			vector<Region> R;
 			string mask_code, filename;
 			int threshold;
+			//split color image into 3 separate channels first
+			utility::splitRGB(src,r,g,b);
 			for(int i = 0; i < number_of_regions; i++){
 				if (fgets(str,MAXLEN,fp) != NULL){
 
@@ -206,6 +209,7 @@ int main (int argc, char** argv){
 
 					//set up variables and data structures
 					Region roi(i_origin,j_origin,rows,cols);
+					R.push_back(roi);
 					mask_type msk;
 					if(mask_code.compare(0,2,"S3") == 0) {msk = SOBEL;}
 					else if(mask_code.compare(0,2,"S5") == 0) {msk = SOBEL5;}
@@ -214,34 +218,28 @@ int main (int argc, char** argv){
 						exit(1);
 					}
 
-					//split color image into 3 separate channels first
-					utility::splitRGB(src,r,g,b);
 					//red channel
-					utility::thresholdDetection(r,tgtR,msk,threshold,roi);
-					r.copyImage(tgtR); //update red source for next roi
+					utility::thresholdDetection(r,tgt,msk,threshold,roi);
+					r.copyImage(tgt); //update red source for next roi
 					//green channel
-					utility::thresholdDetection(g,tgtG,msk,threshold,roi);
-					g.copyImage(tgtG); //update green source for next roi
+					utility::thresholdDetection(g,tgt,msk,threshold,roi);
+					g.copyImage(tgt); //update green source for next roi
 					//red channel
-					utility::thresholdDetection(b,tgtB,msk,threshold,roi);
-					b.copyImage(tgtB); //update blue source for next roi 
-					//combine edge
-					utility::combineRGBEdge(r,g,b,tgtRGB,roi);
-					//merge into new ppm image
-					utility::mergePPM(src,tgtRGB,tgt,roi);
-					src.copyImage(tgt); //update source image for next roi
-
+					utility::thresholdDetection(b,tgt,msk,threshold,roi);
+					b.copyImage(tgt); //update blue source for next roi 
+\
 				}
 			}
+	
 			filename = name + "_threshold_R.pgm";
 			r.save(filename.c_str());
-
 			filename = name + "_threshold_G.pgm";
 			g.save(filename.c_str());
-
 			filename = name + "_threshold_B.pgm";
 			b.save(filename.c_str());
-
+			//combine RGB by ORing and merge with source image
+			utility::combineRGBEdge(r,g,b,tgtRGB,R);
+			utility::mergePPM(src,tgtRGB,tgt,R);
 			filename = name + "_threshold_RGB.ppm";
 			tgt.save(filename.c_str());
 			cout << "RGB threshold" << endl;
