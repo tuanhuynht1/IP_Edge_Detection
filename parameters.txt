@@ -5,5 +5,5 @@ tree.pgm tree GSCT 2 #keep
 0 0 150 550 S5 50
 200 0 150 550 S3 80
 wheel.pgm wheel GSCD 2 #keep
-10 10 100 130 S3 45
-10 160 100 130 S5 135
+5 5 300 100 S5 30 45
+5 205 100 90 S5 20 135

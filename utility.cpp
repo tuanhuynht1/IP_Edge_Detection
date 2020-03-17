@@ -234,7 +234,7 @@ void utility::directionDectection(image& src, image& tgt, mask_type m, float deg
 	//thresholding
 	for(int i = roi.i0; i < roi.ilim; i++){
 		for(int j = roi.j0; j < roi.jlim; j++){
-			if( direction[i-roi.i0][j-roi.j0] >= degree - 10 && direction[i-roi.i0][j-roi.j0] <= degree + 10 ){
+			if( direction[i-roi.i0][j-roi.j0] >= degree - 10  && direction[i-roi.i0][j-roi.j0] <= degree + 10 ){
 				tgt.setPixel(i,j,MAXRGB);
 				// cout << direction[i-roi.i0][j-roi.j0] << " ";
 			}

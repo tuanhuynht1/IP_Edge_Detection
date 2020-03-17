@@ -23,23 +23,24 @@ int main (int argc, char** argv){
 	char str[MAXLEN];
 
 	if ((fp = fopen(argv[1],"r")) == NULL) {
-		fprintf(stderr, "Can't open file: %s\n", argv[1]);
-		exit(1);
+		// fprintf(stderr, "Can't open file: %s\n", argv[1]);
+		// exit(1);
 
 		// cout << "TESTING\n" << endl;
-		// image src, tgt1, tgt2, tgt3, tgt4, h, s, i;
-		// src.read(strdup("004.ppm"));
-		// Region R(0,0,src.getNumberOfRows(),src.getNumberOfColumns());
+		image src, tgt1, tgt2, tgt3, tgt4, h, s, i;
+		src.read(strdup("wheel.pgm"));
+		Region R(0,0,src.getNumberOfRows(),src.getNumberOfColumns());
 
 		// // vector<double> hsi = image::RGBtoHSI(200,100,30);
 		// // cout << hsi[HUE] << " " << hsi[SATURATION] << " " << hsi[INTENSITY] << endl;
 		// // vector<double> rgb = image::HSItoRGB(hsi[HUE],hsi[SATURATION],hsi[INTENSITY]);
 		// // cout << rgb[RED] << " " << rgb[GREEN] << " " << rgb[BLUE] << endl;
 
-		// utility::splitHSI(src,h,s,i);
-		// h.save("h.pgm");
-		// s.save("s.pgm");
-		// i.save("i.pgm");	
+		utility::thresholdDetection(src,tgt1,SOBEL5,40,R);
+		tgt1.save("test.pgm");
+		utility::directionDectection(tgt1,tgt2,SOBEL5,45,R);
+		tgt2.save("dir.pgm");
+	
 		// utility::amplitudeDetection(h,tgt1,SOBEL,R);
 		// utility::amplitudeDetection(s,tgt2,SOBEL,R);
 		// utility::amplitudeDetection(i,tgt3,SOBEL,R);
@@ -54,7 +55,7 @@ int main (int argc, char** argv){
 		// tgt4.save("amp_i.ppm");
 
 		
-		// exit(1);
+		exit(1);
 	}
 
 
@@ -147,20 +148,22 @@ int main (int argc, char** argv){
 
 		//Greyscale Direction Detection//---------------------------------------------------------------------
 		else if(op.compare("GSCD") == 0){
-			image tgt;
+			image bin,tgt;
 			string mask_code;
+			int threshold;
 			int degree;
 			for(int i = 0; i < number_of_regions; i++){
 				if (fgets(str,MAXLEN,fp) != NULL){
 
 					//read in arguments 
-					argV = utility::parse(str,6);
+					argV = utility::parse(str,7);
 					i_origin = atoi(argV[0]);
 					j_origin = atoi(argV[1]);
 					rows = atoi(argV[2]);
 					cols = atoi(argV[3]);
 					mask_code = argV[4];
-					degree = atoi(argV[5]);
+					threshold = atoi(argV[5]);
+					degree = atoi(argV[6]);
 
 					//set up variables and data structures
 					Region roi(i_origin,j_origin,rows,cols);
@@ -172,8 +175,9 @@ int main (int argc, char** argv){
 						exit(1);
 					}
 
-					//perform operation 
-					utility::directionDectection(src,tgt,msk,degree,roi);
+					//perform thresholding first
+					utility::thresholdDetection(src,bin,msk,threshold,roi);
+					utility::directionDectection(bin,tgt,msk,degree,roi);
 					src.copyImage(tgt); //update source for next roi  
 
 				}
@@ -190,9 +194,9 @@ int main (int argc, char** argv){
 			cout << "Invalid opcode \"" << op << "\"" << endl;
 		}
 
-	}
-	
-	fclose(fp);
 
+	}
+
+	fclose(fp);
 	return 0;
 }
