@@ -86,8 +86,6 @@ int main (int argc, char** argv){
 					cols = atoi(argV[3]);
 					mask_code = argV[4];
 
-					// cout << mask_code << endl;
-
 					//set up variables and data structures
 					Region roi(i_origin,j_origin,rows,cols);
 					mask_type msk;
@@ -107,6 +105,46 @@ int main (int argc, char** argv){
 			name = name + "_amplitude.pgm";
 			tgt.save(name.c_str());
 		}
+
+		//Greyscale Threshold Detection//---------------------------------------------------------------------
+		else if(op.compare("GSCT") == 0){
+			image tgt;
+			string mask_code;
+			int threshold;
+			for(int i = 0; i < number_of_regions; i++){
+				if (fgets(str,MAXLEN,fp) != NULL){
+
+					//read in arguments 
+					argV = utility::parse(str,6);
+					i_origin = atoi(argV[0]);
+					j_origin = atoi(argV[1]);
+					rows = atoi(argV[2]);
+					cols = atoi(argV[3]);
+					mask_code = argV[4];
+					threshold = atoi(argV[5]);
+
+					//set up variables and data structures
+					Region roi(i_origin,j_origin,rows,cols);
+					mask_type msk;
+					if(mask_code.compare(0,2,"S3") == 0) {msk = SOBEL;}
+					else if(mask_code.compare(0,2,"S5") == 0) {msk = SOBEL5;}
+					else{
+						cout << "Invalid mask code. Valid options are [S3] and [S5]" << endl;
+						exit(1);
+					}
+
+					//perform operation 
+					utility::thresholdDetection(src,tgt,msk,threshold,roi);
+					src.copyImage(tgt); //update source for next roi  
+
+				}
+			}					
+			name = name + "_threshold.pgm";
+			tgt.save(name.c_str());
+		}
+
+
+
 		//Operation not valid //------------------------------------------------------------------------
 		else{
 			cout << "Invalid opcode \"" << op << "\"" << endl;

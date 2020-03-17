@@ -1,4 +1,6 @@
 baboon.pgm baboon GSCA 2
 100 50 200 200 S3
 320 100 100 100 S5
-  
+tree.pgm tree GSCT 2 #keep
+0 0 150 550 S5 50
+200 0 150 550 S3 80  
