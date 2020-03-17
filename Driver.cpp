@@ -23,8 +23,8 @@ int main (int argc, char** argv){
 	char str[MAXLEN];
 
 	if ((fp = fopen(argv[1],"r")) == NULL) {
-		// fprintf(stderr, "Can't open file: %s\n", argv[1]);
-		// exit(1);
+		fprintf(stderr, "Can't open file: %s\n", argv[1]);
+		exit(1);
 
 		// cout << "TESTING\n" << endl;
 		// image src, tgt1, tgt2, tgt3, tgt4, h, s, i;
@@ -54,7 +54,7 @@ int main (int argc, char** argv){
 		// tgt4.save("amp_i.ppm");
 
 		
-		exit(1);
+		// exit(1);
 	}
 
 
@@ -104,6 +104,7 @@ int main (int argc, char** argv){
 			}					
 			name = name + "_amplitude.pgm";
 			tgt.save(name.c_str());
+			cout << "amplitude" << endl;
 		}
 
 		//Greyscale Threshold Detection//---------------------------------------------------------------------
@@ -141,6 +142,45 @@ int main (int argc, char** argv){
 			}					
 			name = name + "_threshold.pgm";
 			tgt.save(name.c_str());
+			cout << "threshold" << endl;
+		}
+
+		//Greyscale Direction Detection//---------------------------------------------------------------------
+		else if(op.compare("GSCD") == 0){
+			image tgt;
+			string mask_code;
+			int degree;
+			for(int i = 0; i < number_of_regions; i++){
+				if (fgets(str,MAXLEN,fp) != NULL){
+
+					//read in arguments 
+					argV = utility::parse(str,6);
+					i_origin = atoi(argV[0]);
+					j_origin = atoi(argV[1]);
+					rows = atoi(argV[2]);
+					cols = atoi(argV[3]);
+					mask_code = argV[4];
+					degree = atoi(argV[5]);
+
+					//set up variables and data structures
+					Region roi(i_origin,j_origin,rows,cols);
+					mask_type msk;
+					if(mask_code.compare(0,2,"S3") == 0) {msk = SOBEL;}
+					else if(mask_code.compare(0,2,"S5") == 0) {msk = SOBEL5;}
+					else{
+						cout << "Invalid mask code. Valid options are [S3] and [S5]" << endl;
+						exit(1);
+					}
+
+					//perform operation 
+					utility::directionDectection(src,tgt,msk,degree,roi);
+					src.copyImage(tgt); //update source for next roi  
+
+				}
+			}					
+			name = name + "_direction.pgm";
+			tgt.save(name.c_str());
+			cout << "direction" << endl;
 		}
 
 
