@@ -262,7 +262,7 @@ void utility::splitRGB(image& src, image& red, image& green, image& blue){
 }
 
 void utility::combineRGBEdge(image& r, image& g, image& b, image& tgt, Region roi){
-	tgt.copyImage(r);
+	tgt.resize(r.getNumberOfRows(),r.getNumberOfColumns());
 	for(int i = roi.i0; i < roi.ilim; i++){
 		for(int j = roi.j0; j < roi.jlim; j++){
 

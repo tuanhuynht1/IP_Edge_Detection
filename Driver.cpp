@@ -23,8 +23,8 @@ int main (int argc, char** argv){
 	char str[MAXLEN];
 
 	if ((fp = fopen(argv[1],"r")) == NULL) {
-		// fprintf(stderr, "Can't open file: %s\n", argv[1]);
-		// exit(1);
+		fprintf(stderr, "Can't open file: %s\n", argv[1]);
+		exit(1);
 
 		// cout << "TESTING\n" << endl;
 		image src, tgt1, tgt2, tgt3, tgt4, h, s, i;
@@ -186,8 +186,66 @@ int main (int argc, char** argv){
 			tgt.save(name.c_str());
 			cout << "direction" << endl;
 		}
+		
+		//RGB threshold Detection//---------------------------------------------------------------------
+		else if(op.compare("RGBT") == 0){
+			image r, g, b, tgt, tgtR, tgtG, tgtB, tgtRGB;
+			string mask_code, filename;
+			int threshold;
+			for(int i = 0; i < number_of_regions; i++){
+				if (fgets(str,MAXLEN,fp) != NULL){
 
+					//read in arguments 
+					argV = utility::parse(str,6);
+					i_origin = atoi(argV[0]);
+					j_origin = atoi(argV[1]);
+					rows = atoi(argV[2]);
+					cols = atoi(argV[3]);
+					mask_code = argV[4];
+					threshold = atoi(argV[5]);
 
+					//set up variables and data structures
+					Region roi(i_origin,j_origin,rows,cols);
+					mask_type msk;
+					if(mask_code.compare(0,2,"S3") == 0) {msk = SOBEL;}
+					else if(mask_code.compare(0,2,"S5") == 0) {msk = SOBEL5;}
+					else{
+						cout << "Invalid mask code. Valid options are [S3] and [S5]" << endl;
+						exit(1);
+					}
+
+					//split color image into 3 separate channels first
+					utility::splitRGB(src,r,g,b);
+					//red channel
+					utility::thresholdDetection(r,tgtR,msk,threshold,roi);
+					r.copyImage(tgtR); //update red source for next roi
+					//green channel
+					utility::thresholdDetection(g,tgtG,msk,threshold,roi);
+					g.copyImage(tgtG); //update green source for next roi
+					//red channel
+					utility::thresholdDetection(b,tgtB,msk,threshold,roi);
+					b.copyImage(tgtB); //update blue source for next roi 
+					//combine edge
+					utility::combineRGBEdge(r,g,b,tgtRGB,roi);
+					//merge into new ppm image
+					utility::mergePPM(src,tgtRGB,tgt,roi);
+					src.copyImage(tgt); //update source image for next roi
+
+				}
+			}
+			filename = name + "_threshold_R.pgm";
+			r.save(filename.c_str());
+
+			filename = name + "_threshold_G.pgm";
+			g.save(filename.c_str());
+
+			filename = name + "_threshold_B.pgm";
+			b.save(filename.c_str());
+
+			filename = name + "_threshold_RGB.ppm";
+			tgt.save(filename.c_str());
+			cout << "RGB threshold" << endl;
+		}
 
 		//Operation not valid //------------------------------------------------------------------------
 		else{

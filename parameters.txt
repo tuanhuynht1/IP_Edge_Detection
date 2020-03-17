@@ -6,4 +6,7 @@ tree.pgm tree GSCT 2 #keep
 200 0 150 550 S3 80
 wheel.pgm wheel GSCD 2 #keep
 5 5 300 100 S5 30 45
-5 205 100 90 S5 20 135
+5 205 100 90 S5 20 135 #keep
+frog.ppm frog RGBT 2
+10 140 140 230 S5 80
+160 110 140 230 S3 80
