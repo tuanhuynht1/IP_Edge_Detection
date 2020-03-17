@@ -310,7 +310,7 @@ void utility::splitHSI(image& src, image& hue, image& sat, image& its){
 
 	for(int i = 0 ; i < rows; i++){
 		for(int j = 0; j < cols; j++){
-			hue.setPixel(i,j,hsi.getPixel(i,j,HUE)*Hc);
+			hue.setPixel(i,j,checkValue(hsi.getPixel(i,j,HUE)));
 			sat.setPixel(i,j,hsi.getPixel(i,j,SATURATION)*Sc);
 			its.setPixel(i,j,hsi.getPixel(i,j,INTENSITY));
 		}

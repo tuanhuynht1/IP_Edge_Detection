@@ -10,7 +10,11 @@ wheel.pgm wheel GSCD 2 #keep
 frog.ppm frog RGBT 2 #keep
 10 140 140 230 S5 80
 160 110 140 230 S3 80
-004.ppm 004 HSIA 3
+004.ppm 004 HSIA 3 #keep
 10 10 100 490 S3 H
 120 10 100 490 S3 S
 250 10 100 490 S3 I
+garden.ppm garden HSIT 3 #keep
+10 10 150 780 S3 30 I
+170 10 150 780 S3 30 S
+330 10 150 780 S3 30 H
