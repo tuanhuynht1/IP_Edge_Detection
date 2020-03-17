@@ -245,6 +245,77 @@ int main (int argc, char** argv){
 			cout << "RGB threshold" << endl;
 		}
 
+		//Greyscale Amplitude Detection//---------------------------------------------------------------------
+		else if(op.compare("HSIA") == 0){
+			image tgt, H, S, I, *ip;
+			vector<Region> R;
+			string mask_code, seq = "";
+			char hsi;
+			//split source into hsi channels first
+			utility::splitHSI(src,H,S,I);
+			for(int i = 0; i < number_of_regions; i++){
+				if (fgets(str,MAXLEN,fp) != NULL){
+
+					//read in arguments 
+					argV = utility::parse(str,6);
+					i_origin = atoi(argV[0]);
+					j_origin = atoi(argV[1]);
+					rows = atoi(argV[2]);
+					cols = atoi(argV[3]);
+					mask_code = argV[4];
+					hsi = argV[5][0];
+
+					//set up variables and data structures
+					Region roi(i_origin,j_origin,rows,cols);
+					R.push_back(roi);
+					mask_type msk;
+					if(mask_code.compare(0,2,"S3") == 0) {msk = SOBEL;}
+					else if(mask_code.compare(0,2,"S5") == 0) {msk = SOBEL5;}
+					else{
+						cout << "Invalid mask code. Valid options are [S3] and [S5]" << endl;
+						exit(1);
+					}
+
+					//perform operation on specific channel
+					switch(hsi){
+						case 'H':
+							ip = &H;
+							seq += 'H'; 
+							break;
+						case 'S':
+							ip = &S; 
+							seq += 'S';
+							break;
+						case 'I':
+							ip = &I;
+							seq += 'I'; 
+							break;
+					}
+					utility::amplitudeDetection(*ip,tgt,msk,roi);
+					ip->copyImage(tgt); //update temp for next roi  
+				}
+			}
+
+			for(int i = 0; i < seq.size(); i++){
+				switch(seq[i]){
+					case 'H':
+						utility::mergePPM(src,H,tgt,{R[i]});
+						break;
+					case 'S':
+						utility::mergePPM(src,S,tgt,{R[i]});
+						break;
+					case 'I':
+						utility::mergePPM(src,I,tgt,{R[i]});
+						break;
+				}
+				src.copyImage(tgt); //update for next roi
+			}
+
+			name = name + "_amplitude_HSI.ppm";
+			tgt.save(name.c_str());
+			cout << "HSI amplitude" << endl;
+		}
+
 		//Operation not valid //------------------------------------------------------------------------
 		else{
 			cout << "Invalid opcode \"" << op << "\"" << endl;
