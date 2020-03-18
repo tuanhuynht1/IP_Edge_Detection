@@ -95,12 +95,9 @@ vector<vector<int>> utility::applyMask(mask_type m, image& src, Region roi){
 			}
 
 			delta[i-roi.i0][j-roi.j0] = sum;
-			// cout << sum << " ";
 
 		}
-		// cout << endl;
 	}
-	// cout << "done ";
 	return delta; 
 }
 
@@ -203,40 +200,20 @@ void utility::directionDectection(image& src, image& tgt, mask_type m, float deg
 		return;
 	}
 
-
-	for(int i = 0; i < roi.ilen; i++){
-		for(int j = 0; j < roi.jlen; j++){
-			// cout << iDelta[i][j] << "\t";
-		}
-		// cout << endl;
-	}
-	// cout << endl;
-	for(int i = 0; i < roi.ilen; i++){
-		for(int j = 0; j < roi.jlen; j++){
-			// cout << jDelta[i][j] << "\t";
-		}
-		// cout << endl;
-	}
-	// cout << endl;
-
 	//calculate direction
 	vector<vector<float>> direction(roi.ilen, vector<float>(roi.jlen));
 	for(int i = 0; i < direction.size(); i++){
 		for(int j = 0; j < direction[0].size(); j++){
 			//arctan2(di/dj) * degree conversion
 			direction[i][j] = atan2(iDelta[i][j],jDelta[i][j]) * 180.0/3.14159;
-			// cout << direction[i][j] << "\t";
 		}
-		// cout << endl;
 	}
-	// cout << endl;
 
 	//thresholding
 	for(int i = roi.i0; i < roi.ilim; i++){
 		for(int j = roi.j0; j < roi.jlim; j++){
 			if( direction[i-roi.i0][j-roi.j0] >= degree - 10  && direction[i-roi.i0][j-roi.j0] <= degree + 10 ){
 				tgt.setPixel(i,j,MAXRGB);
-				// cout << direction[i-roi.i0][j-roi.j0] << " ";
 			}
 			else{
 				tgt.setPixel(i,j,MINRGB);
@@ -317,15 +294,3 @@ void utility::splitHSI(image& src, image& hue, image& sat, image& its){
 	}	
 
 }
-
-
-
-// utility::edgeDetection(r,tgt1,SOBEL,100,R);
-// 		utility::edgeDetection(g,tgt2,SOBEL,100,R);
-// 		utility::edgeDetection(b,tgt3,SOBEL,100,R);
-
-// 		utility::combineRGBEdge(tgt1,tgt2,tgt3,tgt4,R);
-// 		tgt4.save("OR.pgm");
-// 		utility::mergePPM(src,tgt4,tgt1,R);
-
-// 		tgt1.save("comb.ppm");

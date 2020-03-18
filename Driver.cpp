@@ -5,16 +5,13 @@
 
 #include "utility.h"
 #include "image.h"
-#include "statistics.h"
+#include <iostream>
 #include <vector>
 #include <chrono>
 #include <algorithm>
 
 using namespace std;
-
 #define MAXLEN 256
-// #define M_PI 3.14159
-
 
 int main (int argc, char** argv){
 
@@ -98,14 +95,17 @@ int main (int argc, char** argv){
 					}
 
 					//perform operation 
+					auto started = chrono::high_resolution_clock::now();
 					utility::amplitudeDetection(src,tgt,msk,roi);
+					auto done = chrono::high_resolution_clock::now();
+					cout << "Grey-scale Amplitude Edge " << "(" << roi.ilen << "x" << roi.jlen << "): ";
+					cout << chrono::duration_cast<chrono::milliseconds>(done-started).count() << " ms" << endl;
 					src.copyImage(tgt); //update source for next roi  
 
 				}
 			}					
 			name = name + "_amplitude.pgm";
 			tgt.save(name.c_str());
-			cout << "amplitude" << endl;
 		}
 
 		//Greyscale Threshold Detection//---------------------------------------------------------------------
@@ -135,15 +135,18 @@ int main (int argc, char** argv){
 						exit(1);
 					}
 
-					//perform operation 
+					//perform operation
+					auto started = chrono::high_resolution_clock::now(); 
 					utility::thresholdDetection(src,tgt,msk,threshold,roi);
+					auto done = chrono::high_resolution_clock::now();
+					cout << "Grey-scale Threshold Edge " << "(" << roi.ilen << "x" << roi.jlen << "): ";
+					cout << chrono::duration_cast<chrono::milliseconds>(done-started).count() << " ms" << endl;
 					src.copyImage(tgt); //update source for next roi  
 
 				}
 			}					
 			name = name + "_threshold.pgm";
 			tgt.save(name.c_str());
-			cout << "threshold" << endl;
 		}
 
 		//Greyscale Direction Detection//---------------------------------------------------------------------
@@ -176,15 +179,18 @@ int main (int argc, char** argv){
 					}
 
 					//perform thresholding first
+					auto started = chrono::high_resolution_clock::now();
 					utility::thresholdDetection(src,bin,msk,threshold,roi);
 					utility::directionDectection(bin,tgt,msk,degree,roi);
+					auto done = chrono::high_resolution_clock::now();
+					cout << "Grey-scale Edge Direction " << "(" << roi.ilen << "x" << roi.jlen << "): ";
+					cout << chrono::duration_cast<chrono::milliseconds>(done-started).count() << " ms" << endl;
 					src.copyImage(tgt); //update source for next roi  
 
 				}
 			}					
 			name = name + "_direction.pgm";
 			tgt.save(name.c_str());
-			cout << "direction" << endl;
 		}
 		
 		//RGB threshold Detection//---------------------------------------------------------------------
@@ -193,8 +199,13 @@ int main (int argc, char** argv){
 			vector<Region> R;
 			string mask_code, filename;
 			int threshold;
+
 			//split color image into 3 separate channels first
+			auto start = chrono::high_resolution_clock::now();
 			utility::splitRGB(src,r,g,b);
+			auto fin = chrono::high_resolution_clock::now();
+			cout << "Split RGB Channels " << "(" << src.getNumberOfRows() << "x" << src.getNumberOfColumns() << "): ";
+			cout << chrono::duration_cast<chrono::milliseconds>(fin-start).count() << " ms" << endl;
 			for(int i = 0; i < number_of_regions; i++){
 				if (fgets(str,MAXLEN,fp) != NULL){
 
@@ -219,15 +230,29 @@ int main (int argc, char** argv){
 					}
 
 					//red channel
+					auto started = chrono::high_resolution_clock::now();
 					utility::thresholdDetection(r,tgt,msk,threshold,roi);
+					auto done = chrono::high_resolution_clock::now();
+					cout << "Red Channel Edge " << "(" << roi.ilen << "x" << roi.jlen << "): ";
+					cout << chrono::duration_cast<chrono::milliseconds>(done-started).count() << " ms" << endl;
 					r.copyImage(tgt); //update red source for next roi
+					
 					//green channel
+					started = chrono::high_resolution_clock::now();
 					utility::thresholdDetection(g,tgt,msk,threshold,roi);
+					done = chrono::high_resolution_clock::now();
+					cout << "Green Channel Edge " << "(" << roi.ilen << "x" << roi.jlen << "): ";
+					cout << chrono::duration_cast<chrono::milliseconds>(done-started).count() << " ms" << endl;
 					g.copyImage(tgt); //update green source for next roi
-					//red channel
+					
+					//blue channel
+					started = chrono::high_resolution_clock::now();
 					utility::thresholdDetection(b,tgt,msk,threshold,roi);
+					done = chrono::high_resolution_clock::now();
+					cout << "Blue Channel Edge " << "(" << roi.ilen << "x" << roi.jlen << "): ";
+					cout << chrono::duration_cast<chrono::milliseconds>(done-started).count() << " ms" << endl;
 					b.copyImage(tgt); //update blue source for next roi 
-\
+
 				}
 			}
 	
@@ -237,12 +262,17 @@ int main (int argc, char** argv){
 			g.save(filename.c_str());
 			filename = name + "_threshold_B.pgm";
 			b.save(filename.c_str());
+
 			//combine RGB by ORing and merge with source image
+			auto started = chrono::high_resolution_clock::now();
 			utility::combineRGBEdge(r,g,b,tgtRGB,R);
 			utility::mergePPM(src,tgtRGB,tgt,R);
+			auto done = chrono::high_resolution_clock::now();
+			cout << "Combine Edges (" << src.getNumberOfRows() << "x" << src.getNumberOfColumns() << "): ";
+			cout << chrono::duration_cast<chrono::milliseconds>(done-started).count() << " ms" << endl;
+			
 			filename = name + "_threshold_RGB.ppm";
 			tgt.save(filename.c_str());
-			cout << "RGB threshold" << endl;
 		}
 
 		//HSI Amplitude Detection//---------------------------------------------------------------------
@@ -252,7 +282,13 @@ int main (int argc, char** argv){
 			string mask_code, seq = "";
 			char hsi;
 			//split source into hsi channels first
+			auto started = chrono::high_resolution_clock::now();
 			utility::splitHSI(src,H,S,I);
+			auto done = chrono::high_resolution_clock::now();
+			cout << "Convert RGB to HSI (" << src.getNumberOfRows() << "x" << src.getNumberOfColumns() << "): ";
+			cout << chrono::duration_cast<chrono::milliseconds>(done-started).count() << " ms" << endl;
+
+			started = chrono::high_resolution_clock::now();
 			for(int i = 0; i < number_of_regions; i++){
 				if (fgets(str,MAXLEN,fp) != NULL){
 
@@ -310,10 +346,14 @@ int main (int argc, char** argv){
 				}
 				src.copyImage(tgt); //update for next roi
 			}
-
+			done = chrono::high_resolution_clock::now();
+			cout << "HSI Amplitude Edge";
+			for(auto r : R){
+				cout << " (" << r.ilen << "x" << r.jlen << ")";
+			}
+			cout << ": " << chrono::duration_cast<chrono::milliseconds>(done-started).count() << " ms" << endl;
 			name = name + "_amplitude_HSI.ppm";
 			tgt.save(name.c_str());
-			cout << "HSI amplitude" << endl;
 		}
 
 		//HSI Threshold Detection//---------------------------------------------------------------------
@@ -323,8 +363,15 @@ int main (int argc, char** argv){
 			string mask_code, seq = "";
 			char hsi;
 			int threshold;
+
 			//split source into hsi channels first
+			auto started = chrono::high_resolution_clock::now();
 			utility::splitHSI(src,H,S,I);
+			auto done = chrono::high_resolution_clock::now();
+			cout << "Convert RGB to HSI (" << src.getNumberOfRows() << "x" << src.getNumberOfColumns() << "): ";
+			cout << chrono::duration_cast<chrono::milliseconds>(done-started).count() << " ms" << endl;
+
+			started = chrono::high_resolution_clock::now();
 			for(int i = 0; i < number_of_regions; i++){
 				if (fgets(str,MAXLEN,fp) != NULL){
 
@@ -383,18 +430,21 @@ int main (int argc, char** argv){
 				}
 				src.copyImage(tgt); //update for next roi
 			}
+			done = chrono::high_resolution_clock::now();
+			cout << "HSI Threshold Edge";
+			for(auto r : R){
+				cout << " (" << r.ilen << "x" << r.jlen << ")";
+			}
+			cout << ": " << chrono::duration_cast<chrono::milliseconds>(done-started).count() << " ms" << endl;
 
 			name = name + "_threshold_HSI.ppm";
 			tgt.save(name.c_str());
-			cout << "HSI threshold" << endl;
 		}
 
 		//Operation not valid //------------------------------------------------------------------------
 		else{
 			cout << "Invalid opcode \"" << op << "\"" << endl;
 		}
-
-
 	}
 
 	fclose(fp);
